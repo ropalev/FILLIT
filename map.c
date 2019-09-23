@@ -2,6 +2,24 @@
 // Created by Leto Vania on 22/09/2019.
 //
 
+#include "fillit.h"
+int 		**map_create(int size)
+{
+	int		**map;
+	int		i;
+
+	if (!(map = ((int **)malloc(sizeof(int *) * size))))\
+		return (NULL);
+	while (i < size)
+	{
+		if (!(map[i] = (int *)malloc(sizeof(int) * size)))
+		{
+			map_del(map);
+			return (NULL);
+		}
+	}
+	return (map);
+}
 
 void		map_fill_zero(int **map, int size)
 {
@@ -34,11 +52,13 @@ void 		map_del(int **map)
 	free(map);
 }
 
-void 		map_change_to_letter(int **map)
+void 		map_change_to_letter(int **map, int size)
 {
 	int i;
 	int j;
 
+	i = 0;
+	j = 0;
 	while (i < size)
 	{
 		while (j < size)

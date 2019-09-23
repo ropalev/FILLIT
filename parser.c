@@ -3,77 +3,101 @@
 //
 
 #include "libft/libft.h"
+#include "fillit.h"
 #include <stdio.h>
 
 
-
-int		check_field(char *str)
+void	move_shape(t_shape *shape)
 {
 	int i;
+	int y;
+	int j;
+	int x;
 
+	x = shape->coord[0];
+	y = shape->coord[1];
 	i = 0;
-	while (str[i])
+	j = 1;
+	while (i < 8)
 	{
-		if (i % 5 == 4 || i == 20)
+		shape->coord[j] -= y;
+		if (shape->coord[i] < x)
+			x = shape->coord[i];
+		j += 2;
+		i += 2;
+	}
+	j = 0;
+	while (j < 8)
+	{
+		shape->coord[j] -= x;
+		j += 2;
+	}
+}
+
+void		save_coord(char *tetra, t_shape *shape , int count)
+{
+	int		tag;
+	int		i;
+
+	tag = 1;
+	i = 0;
+	while (i < 20)
+	{
+		if (tetra[i] == '\n')
+			i++;
+		if (tetra[i] == '#')
 		{
-			if (str[i] != '\n')
-				return (0);
-		}
-		else
-		{
-			if (!(str[i] == '.' || str[i] == '#'))
-				return (0);
+			shape->coord[tag - 1] = i % 5;
+			shape->coord[tag] = i / 5;
+			tag += 2;
 		}
 		i++;
 	}
-	return  (1);
+	shape->letter = 'A' + count;
 }
 
-int 	check_tetramino(char *str, int ret)
+int check_tetramino(char *str, int ret)
 {
-	int		i;
-	int 	cnt_border;
-	int 	cnt_cell;
+	int		tag;
+	int 	i;
 
 	i = 0;
-	cnt_border = 0;
-	cnt_cell = 0;
-	while(str[i]) {
-		if (str[i] == '#') {
-			if ((i - 1) >= 0 && str[i - 1] == '#')
-				cnt_border++;
-			if ((i + 1) < 20 && str[i + 1] == '#')
-				cnt_border++;
-			if ((i - 5) >= 0 && str[i - 5] == '#')
-				cnt_border++;
-			if ((i + 5) < 20 && str[i + 5] == '#')
-				cnt_border++;
-			cnt_cell++;
-		}
+	tag = 0;
+	while (i < 21) {
+		if (i % 5 < 4) {
+			if (!(str[i] == '.' || str[i] == '#') && i != 20)
+				return (0);
+			if (str[i] == '#' && ++tag > 4)
+				return (0);
+		} else if (str[i] != '\n')
+			return (0);
+		if (ret == 21 && str[20] != '\n')
+			return (0);
 		i++;
 	}
-	if (ret > 19 && str[20] != '\n')
-		return (0);
-	return ((cnt_border == 6 || cnt_border == 8) && cnt_cell == 4);
+	return (1);
 }
 
-void	parser2(char ** file)
+void		parser(char **file, t_shape **shape)
 {
 	char 	*buf;
 	int 	fd;
 	int 	ret;
+	int		count;
 
-	buf = ft_strnew(21);
+	count = 0;
+	buf = (char*)malloc(sizeof(char)*21);
 	fd = open(*file, O_RDONLY);
+	while((ret = read(fd, buf, 21)) >= 20)
 	{
-		while ((ret = read(fd, buf, 21)) >= 20)
+		buf[ret] = '\0';
+		if (!read_shape(buf, ret, shape, count))
 		{
-			buf[ret] = '\0';
-			if (!(check_tetramino(buf,ret) && check_field(buf)))
-				printf("%s\n", "Бракоделы!");
-			else
-				printf("%s\n", "Валидная фигура");
+			printf("error");
+			del_list(shape);
+			break ;
 		}
+		count++;
 	}
 	free(buf);
 	close(fd);

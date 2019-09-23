@@ -2,30 +2,35 @@
 // Created by Leto Vania on 20/09/2019.
 //
 
-int 	solver(int start_row, int start_col, t_tetromino *tet)
+#include "fillit.h"
+
+int 	solver(int start_row, int start_col, t_shape *tet,int size)
 {
 	int 	row;
 	int		col;
 	int 	square_size;
-	char	**map;
+	int		**map;
 
-	while(*tet)
+	row = 0;
+	col = 0;
+	while (tet)
 	{
 		while (row < square_size) // заменить на start_row
 		{
 			while (col < square_size) // заменит start_col
 			{
-				if(put_tetromino(char **map, t_tetromino)) // uf true
-					solver(row + 1, col + 1,tet->next);
-				remove_tetromino(char **map, t_tetromino);
+				if (check_place(map, tet, col, row, size)) {
+					tetramino_set(map, tet, row, col);
+					if (solver(row, col, tet->next, size))
+						return (1);
+					tetramino_unset(map, tet, row, col);
+				}
 				col++;
 			}
 			row++;
 		}
-		if (!tet->next && size < min_size)
-			min_size = size;
 	}
-
+	return (1); // что нужно вернуть ?
 }
 
 
