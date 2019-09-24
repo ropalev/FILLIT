@@ -7,34 +7,34 @@
 #include <stdio.h>
 
 
-void	move_shape(t_shape *shape)
+void	move_shape(t_shape **shape)
 {
 	int i;
 	int y;
 	int j;
 	int x;
 
-	x = shape->coord[0];
-	y = shape->coord[1];
+	x = (*shape)->coord[0];
+	y = (*shape)->coord[1];
 	i = 0;
 	j = 1;
 	while (i < 8)
 	{
-		shape->coord[j] -= y;
-		if (shape->coord[i] < x)
-			x = shape->coord[i];
+		(*shape)->coord[j] -= y;
+		if ((*shape)->coord[i] < x)
+			x = (*shape)->coord[i];
 		j += 2;
 		i += 2;
 	}
 	j = 0;
 	while (j < 8)
 	{
-		shape->coord[j] -= x;
+		(*shape)->coord[j] -= x;
 		j += 2;
 	}
 }
 
-void		save_coord(char *tetra, t_shape *shape , int count)
+void		save_coord(char *tetra, t_shape **shape , int count)
 {
 	int		tag;
 	int		i;
@@ -47,13 +47,13 @@ void		save_coord(char *tetra, t_shape *shape , int count)
 			i++;
 		if (tetra[i] == '#')
 		{
-			shape->coord[tag - 1] = i % 5;
-			shape->coord[tag] = i / 5;
+			(*shape)->coord[tag - 1] = i % 5;
+			(*shape)->coord[tag] = i / 5;
 			tag += 2;
 		}
 		i++;
 	}
-	shape->letter = 'A' + count;
+	(*shape)->letter = 'A' + count;
 }
 
 int check_tetramino(char *str, int ret)

@@ -17,6 +17,7 @@ int     main(int argc, char *argv[])
 	shape = creat_new_list();
 	head = shape;
 	parser(&argv[1], &shape);
+
 	return (0);
 
 }

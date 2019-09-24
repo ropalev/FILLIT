@@ -25,8 +25,8 @@ int		read_shape(char *buf, int ret, t_shape **shape, int count)
 		return (0);
 	else
 	{
-		save_coord(buf, *shape, count);
-		move_shape(*shape);
+		save_coord(buf, shape, count);
+		move_shape(shape);
 		(*shape)->next = creat_new_list();
 		*shape = (*shape)->next;
 	}
