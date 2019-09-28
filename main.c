@@ -6,7 +6,7 @@
 /*   By: lvania <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 14:17:17 by lvania            #+#    #+#             */
-/*   Updated: 2019/09/28 11:46:17 by lvania           ###   ########.fr       */
+/*   Updated: 2019/09/28 12:39:30 by drinko           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,8 @@ int				main(int argc, char *argv[])
 	int			count;
 	int			**map;
 
-	if (argc == 1)
-	{
-		write(1, "fillit target_name\n", 19);
+	if (!check_argc(argc))
 		return (0);
-	}
 	shape = creat_new_list();
 	head_shape = shape;
 	count = parser(&argv[1], &shape);
@@ -41,6 +38,20 @@ int				main(int argc, char *argv[])
 	return (0);
 }
 
+int				check_argc(int argc)
+{
+	if (argc == 1)
+    {
+        write(1, "fillit target_name\n", 19);
+        return (0);
+    }
+	else if (argc > 2)
+	{
+		write(1, "error\n", 6);
+		return (0);
+	}
+	return (1);
+}
 void			finishing_touch(int **map, int size, t_shape *shape)
 {
 	print_shape(map, size);

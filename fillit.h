@@ -6,7 +6,7 @@
 /*   By: lvania <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/26 16:45:02 by lvania            #+#    #+#             */
-/*   Updated: 2019/09/28 11:47:06 by lvania           ###   ########.fr       */
+/*   Updated: 2019/09/28 12:40:01 by drinko           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,5 @@ int						solver(int **map, t_shape *tet, int size);
 int						ft_sqrt(int num);
 void					print_shape(int **map, int size);
 void					finishing_touch(int **map, int size, t_shape *shape);
+int						check_argc(int argc);
 #endif
