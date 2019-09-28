@@ -1,41 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   solver.c                                           :+:      :+:    :+:   */
+/*   print_shape.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvania <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/09/26 14:50:47 by lvania            #+#    #+#             */
-/*   Updated: 2019/09/26 16:43:34 by lvania           ###   ########.fr       */
+/*   Created: 2019/09/26 14:10:31 by lvania            #+#    #+#             */
+/*   Updated: 2019/09/28 11:49:14 by lvania           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fillit.h"
 
-int			solver(int **map, t_shape *tet, int size)
+void		print_shape(int **map, int size)
 {
-	int		row;
-	int		col;
+	int		i;
+	int		j;
 
-	row = 0;
-	if (tet->next == NULL)
-		return (1);
-	while (row < size)
+	i = 0;
+	while (i < size)
 	{
-		col = 0;
-		while (col < size)
+		j = 0;
+		while (j < size)
 		{
-			if (check_place(tet, row, col, size) &&
-					check_place_zero(map, tet, row, col))
-			{
-				tetramino_set(map, tet, row, col);
-				if (solver(map, tet->next, size))
-					return (1);
-				tetramino_unset(map, tet, row, col);
-			}
-			col++;
+			if (map[i][j] == 0)
+				write(1, ".", 1);
+			else
+				write(1, &map[i][j], 1);
+			j++;
 		}
-		row++;
+		i++;
+		write(1, "\n", 1);
 	}
-	return (0);
 }

@@ -1,14 +1,24 @@
-//
-// Created by Leto Vania on 22/09/2019.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvania <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/26 14:14:19 by lvania            #+#    #+#             */
+/*   Updated: 2019/09/26 14:16:31 by lvania           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "fillit.h"
-int 		**map_create(int size)
+
+int			**map_create(int size)
 {
 	int		**map;
 	int		i;
 
-	if (!(map = ((int **)malloc(sizeof(int *) * size))))\
+	i = 0;
+	if (!(map = ((int **)malloc(sizeof(int *) * size))))
 		return (NULL);
 	while (i < size)
 	{
@@ -17,19 +27,23 @@ int 		**map_create(int size)
 			map_del(map);
 			return (NULL);
 		}
+		i++;
 	}
 	return (map);
 }
 
-void		map_fill_zero(int **map, int size)
+int			**map_fill_zero(void)
 {
-	int i;
-	int j;
+	int		**map;
+	int		i;
+	int		j;
 
 	i = 0;
 	j = 0;
+	map = map_create(104);
 	while (i < 104)
 	{
+		j = 0;
 		while (j < 104)
 		{
 			map[i][j] = 0;
@@ -37,11 +51,12 @@ void		map_fill_zero(int **map, int size)
 		}
 		i++;
 	}
+	return (map);
 }
 
-void 		map_del(int **map)
+void		map_del(int **map)
 {
-	int i;
+	int		i;
 
 	i = 0;
 	while (i < 104)
@@ -51,24 +66,3 @@ void 		map_del(int **map)
 	}
 	free(map);
 }
-
-void 		map_change_to_letter(int **map, int size)
-{
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	while (i < size)
-	{
-		while (j < size)
-		{
-			map[i][j] = map[i][j] + '0';
-			j++;
-		}
-		i++;
-		// может сразу добавить вывод на экран ?
-	}
-}
-
-

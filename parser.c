@@ -1,18 +1,23 @@
-//
-// Created by Leto Vania on 19/09/2019.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lvania <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/09/26 15:02:01 by lvania            #+#    #+#             */
+/*   Updated: 2019/09/26 20:58:50 by lvania           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "libft/libft.h"
 #include "fillit.h"
-#include <stdio.h>
 
-
-void	move_shape(t_shape **shape)
+void		move_shape(t_shape **shape)
 {
-	int i;
-	int y;
-	int j;
-	int x;
+	int		i;
+	int		y;
+	int		j;
+	int		x;
 
 	x = (*shape)->coord[0];
 	y = (*shape)->coord[1];
@@ -34,7 +39,7 @@ void	move_shape(t_shape **shape)
 	}
 }
 
-void		save_coord(char *tetra, t_shape **shape , int count)
+void		save_coord(char *tetra, t_shape **shape, int count)
 {
 	int		tag;
 	int		i;
@@ -47,8 +52,8 @@ void		save_coord(char *tetra, t_shape **shape , int count)
 			i++;
 		if (tetra[i] == '#')
 		{
-			(*shape)->coord[tag - 1] = i % 5;
-			(*shape)->coord[tag] = i / 5;
+			(*shape)->coord[tag - 1] = i / 5;
+			(*shape)->coord[tag] = i % 5;
 			tag += 2;
 		}
 		i++;
@@ -56,20 +61,23 @@ void		save_coord(char *tetra, t_shape **shape , int count)
 	(*shape)->letter = 'A' + count;
 }
 
-int check_tetramino(char *str, int ret)
+int			check_tetramino(char *str, int ret)
 {
 	int		tag;
-	int 	i;
+	int		i;
 
 	i = 0;
 	tag = 0;
-	while (i < 21) {
-		if (i % 5 < 4) {
+	while (i < 21)
+	{
+		if (i % 5 < 4)
+		{
 			if (!(str[i] == '.' || str[i] == '#') && i != 20)
 				return (0);
 			if (str[i] == '#' && ++tag > 4)
 				return (0);
-		} else if (str[i] != '\n')
+		}
+		else if (str[i] != '\n')
 			return (0);
 		if (ret == 21 && str[20] != '\n')
 			return (0);
@@ -78,28 +86,60 @@ int check_tetramino(char *str, int ret)
 	return (1);
 }
 
-void		parser(char **file, t_shape **shape)
+int			check_tetramino_valid(char *str, int ret)
 {
-	char 	*buf;
-	int 	fd;
-	int 	ret;
+	int		i;
+	int		cnt_border;
+	int		cnt_cell;
+
+	i = -1;
+	cnt_border = 0;
+	cnt_cell = 0;
+	if (ret < 20)
+		return (0);
+	while (++i < ret)
+	{
+		if (str[i] == '#')
+		{
+			if ((i - 1) >= 0 && str[i - 1] == '#')
+				cnt_border++;
+			if ((i + 1) < 20 && str[i + 1] == '#')
+				cnt_border++;
+			if ((i - 5) >= 0 && str[i - 5] == '#')
+				cnt_border++;
+			if ((i + 5) < 20 && str[i + 5] == '#')
+				cnt_border++;
+			cnt_cell++;
+		}
+	}
+	return ((cnt_border == 6 || cnt_border == 8) && cnt_cell == 4);
+}
+
+int			parser(char **file, t_shape **shape)
+{
+	char	*buf;
+	int		fd;
+	int		ret;
 	int		count;
+	int		prev;
 
 	count = 0;
-	buf = (char*)malloc(sizeof(char)*21);
+	buf = (char*)malloc(sizeof(char) * 21);
 	fd = open(*file, O_RDONLY);
-	while((ret = read(fd, buf, 21)) >= 20)
+	while ((ret = read(fd, buf, 21)) >= 20)
 	{
 		buf[ret] = '\0';
 		if (!read_shape(buf, ret, shape, count))
 		{
-			printf("error");
 			del_list(shape);
-			break ;
+			return (0);
 		}
 		count++;
+		prev = ret;
 	}
 	free(buf);
 	close(fd);
+	if (prev != 20)
+		count = 0;
+	return (count);
 }
-
